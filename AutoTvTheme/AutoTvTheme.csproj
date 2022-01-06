@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+<PropertyGroup> <TargetFrameworks>netstandard2.0;</TargetFrameworks> <AssemblyVersion>1.2.0.0</AssemblyVersion> <FileVersion>1.2.0.0</FileVersion> <Version>1.2.0.0</Version> <Description>Automatically download TV series theme music</Description> </PropertyGroup>
+
+<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+  <CodeAnalysisRuleSet />
+</PropertyGroup>
+
+<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+  <CodeAnalysisRuleSet />
+</PropertyGroup>
+
+<ItemGroup>
+  <None Remove="AudioFingerprinting\5fnb1sma.csw~" />
+  <None Remove="thumb.jpg" />
+  <None Remove="thumb.png" />
+</ItemGroup>
+
+<ItemGroup>
+  <EmbeddedResource Include="thumb.png" />
+</ItemGroup>
+
+
+<ItemGroup> <PackageReference Include="mediabrowser.server.core" Version="4.6.0.50" /> <PackageReference Include="System.Memory" Version="4.5.4" /></ItemGroup>
+
+</Project>
