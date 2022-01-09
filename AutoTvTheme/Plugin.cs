@@ -19,27 +19,12 @@ namespace AutoTvTheme
 
         public override string Name         => "Auto TV Theme Downloader";
         public ImageFormat ThumbImageFormat => ImageFormat.Png;
-        public override Guid Id             => new Guid("C841F98A-2C8C-4CFB-A49F-5EC33936DA60");
-        
+        public override Guid Id             => new Guid("25CADBFE-A81B-457F-9889-0D65D9B00B5A");
         public Stream GetThumbImage()
         {
             var type = GetType();
 
             return type.Assembly.GetManifestResourceStream(type.Namespace + ".thumb.png");
         }
-
-        //public IEnumerable<PluginPageInfo> GetPages() => new[]
-        //{
-        //    new PluginPageInfo
-        //    {
-        //        Name = "AutoTvThemeConfigurationPage",
-        //        EmbeddedResourcePath = GetType().Namespace + ".Configuration.AutoTvThemeConfigurationPage.html",
-        //    }
-        //    //new PluginPageInfo
-        //    //{
-        //    //    Name = "AutoTvThemeConfigurationPageJS",
-        //    //    EmbeddedResourcePath = GetType().Namespace + ".Configuration.AutoTvThemeConfigurationPage.js"
-        //    //}
-        //};
     }
 }

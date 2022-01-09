@@ -84,7 +84,7 @@ namespace AutoTvTheme
             string basePageUrlTemplate = "https://www.televisiontunes.com/";
             string downloadTemplate = "https://www.televisiontunes.com/song/download/";
 
-            string basePageUrl = basePageUrlTemplate + seriesName.Replace(' ', '_').Replace(":", "").Trim() + ".html";
+            string basePageUrl = basePageUrlTemplate + seriesName.Replace(' ', '_').Replace(":", "").Replace(",", "").Trim() + ".html";
             Log.Debug(basePageUrl);
 
             string baseHtml = new WebClient().DownloadString(basePageUrl);
