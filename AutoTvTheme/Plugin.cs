@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using AutoTvTheme.Configuration;
 using MediaBrowser.Common.Configuration;
 using MediaBrowser.Common.Plugins;
 using MediaBrowser.Model.Drawing;
-using MediaBrowser.Model.Plugins;
 using MediaBrowser.Model.Serialization;
 
 namespace AutoTvTheme
 {
-    
+
     public class Plugin  : BasePlugin<PluginConfiguration>, IHasThumbImage
     {
         public static Plugin Instance { get; set; }

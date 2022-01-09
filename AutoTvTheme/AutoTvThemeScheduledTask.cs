@@ -28,7 +28,9 @@ namespace AutoTvTheme
             Log = logManager.GetLogger(Plugin.Instance.Name);
         }
 
+#pragma warning disable 1998
         public async Task Execute(CancellationToken cancellationToken, IProgress<double> progress)
+#pragma warning restore 1998
         {
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
 
@@ -47,49 +49,14 @@ namespace AutoTvTheme
                     string seriesName = series.Name;
                     string themeSongPath = Path.Combine(series.Path, "theme.mp3");
 
-                    string basePageUrlTemplate = "https://www.televisiontunes.com/";
-                    string downloadTemplate = "https://www.televisiontunes.com/song/download/";
-
-                    string basePageUrl = basePageUrlTemplate + seriesName.Replace(' ', '_') + ".html";
-
-                    string baseHtml = new WebClient().DownloadString(basePageUrl);
-
-                    int startIndex = baseHtml.IndexOf("/song/download/");
-                    Log.Debug(series.Name + " index is " + startIndex.ToString());
-
-                    if (startIndex != -1)
-                    {
-                        startIndex = startIndex + 15;
-                        int endIndex = baseHtml.IndexOf("\"", startIndex);
-                        string code = baseHtml.SubstringFromXToY(startIndex, endIndex);
-
-                        string downloadUrl = downloadTemplate + code;
-
-                        Log.Debug("Trying to download " + series.Name + " from " + downloadUrl);
-
-                        using (WebClient wc = new WebClient())
-                        {
-                            try
-                            {
-                                wc.DownloadFile(downloadUrl, themeSongPath);
-                                Log.Info(series.Name + " theme song succesfully downloaded");
-                                gotOne = true;
-                            }
-                            catch 
-                            {
-                                Log.Debug(series.Name + " not found.  Trying alternate site.");
-                                if (getFromPlex(series, themeSongPath) == true)
-                                    gotOne = true;
-                            }
-                        }
-                    }
+                    if (getFromTvTunes(series, themeSongPath) == true)
+                        gotOne = true;
                     else
                     {
-                        Log.Debug(series.Name + " not found.  Trying alternate site.");
                         if (getFromPlex(series, themeSongPath) == true)
                             gotOne = true;
                     }
-                        
+
                 }
 
                 currentPercent = ((double) count / (double)total) * (double) 100;
@@ -100,39 +67,109 @@ namespace AutoTvTheme
 
             if (gotOne == true)
             {
-                LibraryManager.QueueLibraryScan();
                 Log.Debug("Library scan queued");
+                LibraryManager.QueueLibraryScan();              
             }
         }
 
+        /// <summary>
+        /// Attempt to download theme music from televisiontunes.com
+        /// </summary>
+        /// <param name="series"></param>
+        /// <param name="themeSongPath"></param>
+        /// <returns></returns>
+        private bool getFromTvTunes(MediaBrowser.Controller.Entities.TV.Series series, string themeSongPath)
+        {
+            string seriesName = series.Name;
+            string basePageUrlTemplate = "https://www.televisiontunes.com/";
+            string downloadTemplate = "https://www.televisiontunes.com/song/download/";
+
+            string basePageUrl = basePageUrlTemplate + seriesName.Replace(' ', '_').Replace(":", "").Trim() + ".html";
+            Log.Debug(basePageUrl);
+
+            string baseHtml = new WebClient().DownloadString(basePageUrl);
+
+            int startIndex = baseHtml.IndexOf("/song/download/");
+            Log.Debug("Trying to download " + seriesName + " from primary source.");
+            Log.Debug(seriesName + " index is " + startIndex.ToString());
+
+            //if (startIndex == -1)
+            //{
+            //    string[] lines = baseHtml.Split('\n');
+            //    foreach(string line in lines)
+            //    {
+            //        Log.Debug(line);
+            //    }               
+            //}
+
+            if (startIndex != -1)
+            {
+                startIndex = startIndex + 15;
+                int endIndex = baseHtml.IndexOf("\"", startIndex);
+                string code = baseHtml.SubstringFromXToY(startIndex, endIndex);
+                string downloadUrl = downloadTemplate + code;
+
+                using (WebClient wc = new WebClient())
+                {
+                    try
+                    {
+                        wc.DownloadFile(downloadUrl, themeSongPath);
+                        Log.Info(seriesName + " theme song succesfully downloaded from primary source.");
+                        return true;
+                    }
+                    catch
+                    {
+                        Log.Debug(seriesName + " not found at primary source.");
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                Log.Debug(series.Name + " not found at primry source.");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Attempt to download theme music from Plex site
+        /// </summary>
+        /// <param name="series"></param>
+        /// <param name="themeSongPath"></param>
+        /// <returns></returns>
         private bool getFromPlex(MediaBrowser.Controller.Entities.TV.Series series, string themeSongPath)
         {
+            string seriesName = series.Name;
             string tvdb = series.GetProviderId(MetadataProviders.Tvdb);
             if (!string.IsNullOrEmpty(tvdb))
             {
                 string downloadUrl = $"http://tvthemes.plexapp.com/{tvdb}.mp3";
-                Log.Debug("Trying to download " + series.Name + " from " + downloadUrl);
+                Log.Debug("Trying to download " + series.Name);
 
                 try
                 {
                     using (WebClient wc = new WebClient())
                     {
                         wc.DownloadFile(downloadUrl, themeSongPath);
-                        Log.Info(series.Name + " theme song succesfully downloaded");
+                        Log.Info(seriesName + " theme song succesfully downloaded from backup source.");
                         return true;
                     }
                 }
                 catch
                 {
-                    Log.Info(series.Name + " theme song not downloaded");
+                    Log.Info(seriesName + " theme song not downloaded from backup source.");
                 }
             }
             else
-                Log.Debug("No TVDB Id found for " + series.Name);
+                Log.Debug("No TVDB Id found for " + seriesName + " theme song not downloaded from backup source.");
 
             return false;
         }
 
+        /// <summary>
+        /// Configure the default triggers
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<TaskTriggerInfo> GetDefaultTriggers()
         {
             return new[]
@@ -145,6 +182,10 @@ namespace AutoTvTheme
             };
         }
 
+        /// <summary>
+        /// Get list of TV series from Emby
+        /// </summary>
+        /// <returns></returns>
         private IEnumerable<MediaBrowser.Controller.Entities.TV.Series> GetSeriesFromLibrary()
         {
             return LibraryManager.GetItemList(new InternalItemsQuery
