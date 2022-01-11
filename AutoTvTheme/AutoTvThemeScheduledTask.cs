@@ -56,7 +56,6 @@ namespace AutoTvTheme
                         if (getFromPlex(series, themeSongPath) == true)
                             gotOne = true;
                     }
-
                 }
 
                 currentPercent = ((double) count / (double)total) * (double) 100;
