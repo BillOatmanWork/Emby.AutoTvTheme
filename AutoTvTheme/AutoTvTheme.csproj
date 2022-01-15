@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-<PropertyGroup> <TargetFrameworks>netstandard2.0;</TargetFrameworks> <AssemblyVersion>1.2.0.0</AssemblyVersion> <FileVersion>1.2.0.0</FileVersion> <Version>1.2.0.0</Version> <Description>Automatically download TV series theme music</Description> </PropertyGroup>
+<PropertyGroup> <TargetFrameworks>netstandard2.0;</TargetFrameworks> <AssemblyVersion>1.2.0.0</AssemblyVersion> <FileVersion>1.2.0.0</FileVersion> <Version>1.2.0.0</Version> <Description>Automatically download TV series theme music</Description> <PackageReadmeFile>README.md</PackageReadmeFile> <RepositoryUrl>https://github.com/BillOatmanWork/Emby.AutoTvTheme</RepositoryUrl> <RepositoryType>github</RepositoryType> </PropertyGroup>
 
 <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
   <CodeAnalysisRuleSet />
@@ -18,6 +18,13 @@
 
 <ItemGroup>
   <EmbeddedResource Include="thumb.png" />
+</ItemGroup>
+
+<ItemGroup>
+  <None Include="..\README.md">
+    <Pack>True</Pack>
+    <PackagePath>\</PackagePath>
+  </None>
 </ItemGroup>
 
 
