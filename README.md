@@ -6,3 +6,5 @@ Uses up to two servers to find theme music for TV series and place the mp3 file 
 Note that to hear the theme music you must enable it in Emby.
 
 No configuration.  Scheduled task runs every 12 hours.  To get series immediately, manually run the scheduled task.
+
+This plugin is free.  If you find it of value and have the means, please consider making a donation to a local charity that benefits children.
