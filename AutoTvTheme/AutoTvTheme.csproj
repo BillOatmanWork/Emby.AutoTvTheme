@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-<PropertyGroup> <TargetFrameworks>netstandard2.0;</TargetFrameworks> <AssemblyVersion>1.2.0.0</AssemblyVersion> <FileVersion>1.2.0.0</FileVersion> <Version>1.3.0.0</Version> <Description>Automatically download TV series theme music</Description> <PackageReadmeFile>README.md</PackageReadmeFile> <RepositoryUrl>https://github.com/BillOatmanWork/Emby.AutoTvTheme</RepositoryUrl> <RepositoryType>github</RepositoryType> </PropertyGroup>
+<PropertyGroup> <TargetFrameworks>netstandard2.0;</TargetFrameworks> <AssemblyVersion></AssemblyVersion> <FileVersion></FileVersion> <Version>1.5.0.0</Version> <Description>Automatically download TV series theme music</Description> <PackageReadmeFile>README.md</PackageReadmeFile> <RepositoryUrl>https://github.com/BillOatmanWork/Emby.AutoTvTheme</RepositoryUrl> <RepositoryType>github</RepositoryType> </PropertyGroup>
 
 <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
   <CodeAnalysisRuleSet />
@@ -28,6 +28,6 @@
 </ItemGroup>
 
 
-<ItemGroup> <PackageReference Include="mediabrowser.server.core" Version="4.7.0.30" /> <PackageReference Include="System.Memory" Version="4.5.4" /></ItemGroup>
+<ItemGroup> <PackageReference Include="mediabrowser.server.core" Version="4.7.9" /> <PackageReference Include="System.Memory" Version="4.5.5" /></ItemGroup>
 
 </Project>
