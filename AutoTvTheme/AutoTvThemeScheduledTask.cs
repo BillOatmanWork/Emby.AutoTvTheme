@@ -86,7 +86,17 @@ namespace AutoTvTheme
             string basePageUrl = basePageUrlTemplate + seriesName.Replace(' ', '_').Replace(":", "").Replace(",", "").Trim() + ".html";
             Log.Debug(basePageUrl);
 
-            string baseHtml = new WebClient().DownloadString(basePageUrl);
+            string baseHtml;
+
+            try
+            {
+                baseHtml = new WebClient().DownloadString(basePageUrl);
+            }
+            catch(Exception ex)
+            {
+                Log.Debug($"{seriesName} base page URL exception: {ex.Message}");
+                return false;
+            }
 
             int startIndex = baseHtml.IndexOf("/song/download/");
             Log.Debug("Trying to download " + seriesName + " from primary source.");
